@@ -5,8 +5,8 @@ from capparselib.parsers import CAPParser
 
 
 
-class Client:
-    def __init__(self, url):
+class CAPClient:
+    def __init__(self, url="https://alertswiss.poatest.ch/alertswiss/v1/alerts"):
         self.url = url
         
     def get_parsed_alerts(self):
@@ -29,4 +29,3 @@ class Client:
             parsed_alert['content'] = CAPParser(alert['alert']).as_dict()
             parsed_alerts.append(parsed_alert)
         return parsed_alerts
-    
