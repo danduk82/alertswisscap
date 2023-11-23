@@ -33,7 +33,7 @@ if config.config_file_name is not None:
 # target_metadata = [CAPAlert.metadata, CAPInfo.metadata, CAPArea.metadata]
 
 
-from alertswisscap.model.orm.AlertsORM import Base
+from alertswisscap.model.orm.cap import Base
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
