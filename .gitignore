@@ -14,6 +14,7 @@ dist/
 
 # .env file
 .env
+.env-*
 
 # Virtual environment
 .venv/
