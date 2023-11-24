@@ -14,5 +14,11 @@ for geocode in  alerts[0]['content'][0]['cap_info'][1]['cap_area'][0]['geocodes'
 
 #print(cap_polygons)
 
+# note to self
+# in alerts[nb_alert]['content'][0]['cap_info'][np_cap_info]['cap_area'][0]['polygons']
+# sometimes there is no 'cap_area'
+# possibly sometimes there is no 'polygons'
+# nb_cap_info is equal to the number of languages, but all languages have the same exact 'cap_area' and 'polygons', so we can just take the first one
+
 mp = AlertSwissCapGeometryMultiPolygon(cap_polygons)
 print(mp._multiPolygon)
