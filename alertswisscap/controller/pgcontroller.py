@@ -16,31 +16,33 @@ class PgController():
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
         
-    def put_alert(self, alert):
-        cap_alert = CAPAlert(
-            reference=alert['reference'],
-            cap_id=alert['cap_id'],
-            cap_sender=alert['cap_sender'],
-            cap_sent=alert['cap_sent'],
-            cap_status=alert['cap_status'],
-            cap_message_type=alert['cap_message_type'],
-            cap_scope=alert['cap_scope']
-        )
-        cap_info = CAPInfo(
-            cap_language=alert['cap_language'],
-            cap_category=alert['cap_category'],
-            cap_event=alert['cap_event'],
-            cap_urgency=alert['cap_urgency'],
-            cap_severity=alert['cap_severity'],
-            cap_certainty=alert['cap_certainty'],
-            cap_onset=alert['cap_onset'],
-            cap_sender_name=alert['cap_sender_name'],
-            cap_headline=alert['cap_headline'],
-            cap_description=alert['cap_description'],
-            cap_instruction=alert['cap_instruction'],
-            cap_contact=alert['cap_contact']
-        )
-        cap_alert.cap_info = cap_info
-        self.session.add(cap_alert)
+    def put_alerts(self, alerts):
+        for alert in alerts:
+            cap_alert = CAPAlert(
+                reference=alert['reference'],
+                cap_id=alert['cap_id'],
+                cap_sender=alert['cap_sender'],
+                cap_sent=alert['cap_sent'],
+                cap_status=alert['cap_status'],
+                cap_message_type=alert['cap_message_type'],
+                cap_scope=alert['cap_scope']
+            )
+            for info in alert['cap_info']:
+                cap_info = CAPInfo(
+                    cap_language=info['cap_language'],
+                    cap_category=info['cap_category'],
+                    cap_event=info['cap_event'],
+                    cap_urgency=info['cap_urgency'],
+                    cap_severity=info['cap_severity'],
+                    cap_certainty=info['cap_certainty'],
+                    cap_onset=info['cap_onset'],
+                    cap_sender_name=info['cap_sender_name'],
+                    cap_headline=info['cap_headline'],
+                    cap_description=info['cap_description'],
+                    cap_instruction=info['cap_instruction'],
+                    cap_contact=info['cap_contact']
+                )
+                cap_alert.cap_info.append(cap_info)
+            self.session.add(cap_alert)
         self.session.commit()
     

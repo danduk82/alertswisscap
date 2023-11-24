@@ -12,6 +12,7 @@ capparselib = "^0.6.6"
 alembic = "^1.12.1"
 psycopg2-binary = "^2.9.9"
 geoalchemy2 = "^0.14.2"
+shapely = "^2.0.2"
 
 
 [build-system]
