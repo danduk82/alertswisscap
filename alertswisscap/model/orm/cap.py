@@ -1,14 +1,5 @@
 from geoalchemy2 import Geometry
-from sqlalchemy import (
-    JSON,
-    Column,
-    DateTime,
-    Float,
-    ForeignKey,
-    Integer,
-    String,
-    create_engine,
-)
+from sqlalchemy import JSON, Column, DateTime, Float, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 

@@ -27,6 +27,7 @@ repos:
         exclude: |-
           (?x)^(
             tests/examples/.*\.json
+            |.github/.*
           )$
         args:
           - --ignore-words=.github/spell-ignore-words.txt

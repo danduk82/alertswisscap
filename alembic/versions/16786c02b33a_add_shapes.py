@@ -74,13 +74,9 @@ def upgrade() -> None:
     # op.create_index('idx_cap_polygons_geom', 'cap_polygons', ['geom'], unique=False, postgresql_using='gist')
     op.add_column("cap_areas", sa.Column("cap_circle_id", sa.Integer(), nullable=True))
     op.add_column("cap_areas", sa.Column("cap_polygon_id", sa.Integer(), nullable=True))
-    op.add_column(
-        "cap_areas", sa.Column("cap_linestring_id", sa.Integer(), nullable=True)
-    )
+    op.add_column("cap_areas", sa.Column("cap_linestring_id", sa.Integer(), nullable=True))
     op.create_foreign_key(None, "cap_areas", "cap_circles", ["cap_circle_id"], ["id"])
-    op.create_foreign_key(
-        None, "cap_areas", "cap_linestrings", ["cap_linestring_id"], ["id"]
-    )
+    op.create_foreign_key(None, "cap_areas", "cap_linestrings", ["cap_linestring_id"], ["id"])
     op.create_foreign_key(None, "cap_areas", "cap_polygons", ["cap_polygon_id"], ["id"])
     # ### end Alembic commands ###
 
@@ -93,9 +89,7 @@ def downgrade() -> None:
     op.drop_column("cap_areas", "cap_linestring_id")
     op.drop_column("cap_areas", "cap_polygon_id")
     op.drop_column("cap_areas", "cap_circle_id")
-    op.drop_index(
-        "idx_cap_polygons_geom", table_name="cap_polygons", postgresql_using="gist"
-    )
+    op.drop_index("idx_cap_polygons_geom", table_name="cap_polygons", postgresql_using="gist")
     op.drop_table("cap_polygons")
     op.drop_index(
         "idx_cap_linestrings_geom",
@@ -103,8 +97,6 @@ def downgrade() -> None:
         postgresql_using="gist",
     )
     op.drop_table("cap_linestrings")
-    op.drop_index(
-        "idx_cap_circles_geom", table_name="cap_circles", postgresql_using="gist"
-    )
+    op.drop_index("idx_cap_circles_geom", table_name="cap_circles", postgresql_using="gist")
     op.drop_table("cap_circles")
     # ### end Alembic commands ###

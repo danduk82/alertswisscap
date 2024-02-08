@@ -54,9 +54,7 @@ class AlertSwissCapGeometryMultiPolygon:
 
     def _coord_str_list_to_polygon(self, coord_str_list):
         log.debug(f"coord_str_list: {coord_str_list}")
-        return [
-            self._coord_str_to_coord_tuple(coord_str) for coord_str in coord_str_list
-        ]
+        return [self._coord_str_to_coord_tuple(coord_str) for coord_str in coord_str_list]
 
     def _coord_str_to_coord_tuple(self, coord_str):
         log.debug(f"coord_str: {coord_str}")

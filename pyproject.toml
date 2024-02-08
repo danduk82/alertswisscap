@@ -1,3 +1,22 @@
+[tool.black]
+line-length = 110
+target-version = ["py39"]
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = false
+use_parentheses = true
+line_length = 110
+
+[tool.mypy]
+python_version = 3.9
+ignore_missing_imports = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+strict = true
+
 [tool.poetry]
 name = "alertswisscap"
 version = "0.1.0"
@@ -13,7 +32,6 @@ alembic = "^1.12.1"
 psycopg2-binary = "^2.9.9"
 geoalchemy2 = "^0.14.2"
 shapely = "^2.0.2"
-
 
 [build-system]
 requires = ["poetry-core"]

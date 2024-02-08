@@ -23,9 +23,7 @@ def main():
 
     cap_polygons = {}
 
-    cap_polygons["polygons"] = alerts[0]["content"][0]["cap_info"][1]["cap_area"][0][
-        "polygons"
-    ]
+    cap_polygons["polygons"] = alerts[0]["content"][0]["cap_info"][1]["cap_area"][0]["polygons"]
     cap_polygons["exclude_polygons"] = []
     for geocode in alerts[0]["content"][0]["cap_info"][1]["cap_area"][0]["geocodes"]:
         if geocode["valueName"] == "ALERTSWISS_EXCLUDE_POLYGON":

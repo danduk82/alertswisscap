@@ -4,15 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
 from ..apiclient.client import CAPClient
-from ..model.orm.cap import (
-    Base,
-    CAPAlert,
-    CAPArea,
-    CAPCircle,
-    CAPInfo,
-    CAPLinestring,
-    CAPPolygon,
-)
+from ..model.orm.cap import Base, CAPAlert, CAPArea, CAPCircle, CAPInfo, CAPLinestring, CAPPolygon
 
 
 class PgController:
