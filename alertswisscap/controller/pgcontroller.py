@@ -3,13 +3,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-from ..apiclient.client import CAPClient
-from ..model.orm.cap import Base, CAPAlert, CAPArea, CAPCircle, CAPInfo, CAPLinestring, CAPPolygon
+from alertswisscap.model.orm.cap import Base, CAPAlert, CAPArea, CAPCircle, CAPInfo, CAPLinestring, CAPPolygon
 
 
-class PgController:
-    def __init__(self, pg_url):
-        self.pg_url = pg_url
+class CapPgController:
+    def __init__(self, pg_url, dbschema="alertswisscap"):
+        self.url = pg_url
+        self.dbschema = dbschema
         self.engine = create_engine(self.url)
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()

@@ -14,10 +14,7 @@ config.set_section_option(section, "PGUSER", os.environ.get("PGUSER", ""))
 config.set_section_option(section, "PGPASSWORD", os.environ.get("PGPASSWORD", ""))
 config.set_section_option(section, "PGHOST", os.environ.get("PGHOST", ""))
 config.set_section_option(section, "PGPORT", os.environ.get("PGPORT", ""))
-config.set_section_option(section, "PGNAME", os.environ.get("PGNAME", ""))
 config.set_section_option(section, "PGDBNAME", os.environ.get("PGDBNAME", ""))
-config.set_section_option(section, "PGSCHEMA", os.environ.get("PGSCHEMA", ""))
-
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

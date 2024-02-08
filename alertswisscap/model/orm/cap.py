@@ -1,9 +1,9 @@
 from geoalchemy2 import Geometry
-from sqlalchemy import JSON, Column, DateTime, Float, ForeignKey, Integer, String, create_engine
+from sqlalchemy import JSON, Column, DateTime, Float, ForeignKey, Integer, MetaData, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+Base = declarative_base(metadata=MetaData(schema="alertswisscap"))
 
 
 class CAPAlert(Base):

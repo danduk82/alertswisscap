@@ -1,7 +1,8 @@
 import argparse as ap
 
-from apiclient.client import DEFAULT_CAP_URL, CAPClient
-from model.geometries import AlertSwissCapGeometryMultiPolygon
+from alertswisscap.apiclient.client import DEFAULT_CAP_URL, CAPClient
+from alertswisscap.controller.pgcontroller import CapPgController
+from alertswisscap.model.geometries import AlertSwissCapGeometryMultiPolygon
 
 
 def parser():
@@ -39,6 +40,9 @@ def main():
 
     mp = AlertSwissCapGeometryMultiPolygon(cap_polygons)
     print(mp._multiPolygon)
+
+    pg_url = "postgresql://naz_user:password@localhost:5432/data_naz"
+    CapPgController(pg_url)
 
 
 if __name__ == "__main__":
