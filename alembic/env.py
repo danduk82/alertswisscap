@@ -1,23 +1,22 @@
+import os
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-import os
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
 section = config.config_ini_section
-config.set_section_option(section, "PGUSER", os.environ.get("PGUSER",""))
-config.set_section_option(section, "PGPASSWORD", os.environ.get("PGPASSWORD",""))
-config.set_section_option(section, "PGHOST", os.environ.get("PGHOST",""))
-config.set_section_option(section, "PGPORT", os.environ.get("PGPORT",""))  
-config.set_section_option(section, "PGNAME", os.environ.get("PGNAME",""))
-config.set_section_option(section, "PGDBNAME", os.environ.get("PGDBNAME",""))
-config.set_section_option(section, "PGSCHEMA", os.environ.get("PGSCHEMA",""))
+config.set_section_option(section, "PGUSER", os.environ.get("PGUSER", ""))
+config.set_section_option(section, "PGPASSWORD", os.environ.get("PGPASSWORD", ""))
+config.set_section_option(section, "PGHOST", os.environ.get("PGHOST", ""))
+config.set_section_option(section, "PGPORT", os.environ.get("PGPORT", ""))
+config.set_section_option(section, "PGNAME", os.environ.get("PGNAME", ""))
+config.set_section_option(section, "PGDBNAME", os.environ.get("PGDBNAME", ""))
+config.set_section_option(section, "PGSCHEMA", os.environ.get("PGSCHEMA", ""))
 
 
 # Interpret the config file for Python logging.
@@ -34,6 +33,7 @@ if config.config_file_name is not None:
 
 
 from alertswisscap.model.orm.cap import Base
+
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -80,9 +80,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
