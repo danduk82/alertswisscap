@@ -42,7 +42,12 @@ def main():
     print(mp._multiPolygon)
 
     pg_url = "postgresql://naz_user:password@localhost:5432/data_naz"
-    CapPgController(pg_url)
+    cap_pg_controller = CapPgController(pg_url)
+    with open("/tmp/parsed_alerts_2.json", "w") as f:
+        import json
+
+        f.write(json.dumps(alerts, indent=2))
+    cap_pg_controller.put_alerts(alerts)
 
 
 if __name__ == "__main__":

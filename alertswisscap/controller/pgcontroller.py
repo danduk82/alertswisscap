@@ -18,27 +18,27 @@ class CapPgController:
         for alert in alerts:
             cap_alert = CAPAlert(
                 reference=alert["reference"],
-                cap_id=alert["cap_id"],
-                cap_sender=alert["cap_sender"],
-                cap_sent=alert["cap_sent"],
-                cap_status=alert["cap_status"],
-                cap_message_type=alert["cap_message_type"],
-                cap_scope=alert["cap_scope"],
+                cap_id=alert["content"][0]["cap_id"],
+                cap_sender=alert["content"][0]["cap_sender"],
+                cap_sent=alert["content"][0]["cap_sent"],
+                cap_status=alert["content"][0]["cap_status"],
+                cap_message_type=alert["content"][0]["cap_message_type"],
+                cap_scope=alert["content"][0]["cap_scope"],
             )
-            for info in alert["cap_info"]:
+            for info in alert["content"][0]["cap_info"]:
                 cap_info = CAPInfo(
-                    cap_language=info["cap_language"],
-                    cap_category=info["cap_category"],
-                    cap_event=info["cap_event"],
-                    cap_urgency=info["cap_urgency"],
-                    cap_severity=info["cap_severity"],
-                    cap_certainty=info["cap_certainty"],
-                    cap_onset=info["cap_onset"],
-                    cap_sender_name=info["cap_sender_name"],
-                    cap_headline=info["cap_headline"],
-                    cap_description=info["cap_description"],
-                    cap_instruction=info["cap_instruction"],
-                    cap_contact=info["cap_contact"],
+                    cap_language=info.get("cap_language", None),
+                    cap_category=info.get("cap_category", None),
+                    cap_event=info.get("cap_event", None),
+                    cap_urgency=info.get("cap_urgency", None),
+                    cap_severity=info.get("cap_severity", None),
+                    cap_certainty=info.get("cap_certainty", None),
+                    cap_onset=info.get("cap_onset", None),
+                    cap_sender_name=info.get("cap_sender_name", None),
+                    cap_headline=info.get("cap_headline", None),
+                    cap_description=info.get("cap_description", None),
+                    cap_instruction=info.get("cap_instruction", None),
+                    cap_contact=info.get("cap_contact", None),
                 )
                 cap_alert.cap_info.append(cap_info)
             self.session.add(cap_alert)
