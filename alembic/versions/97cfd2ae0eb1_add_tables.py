@@ -67,7 +67,7 @@ def upgrade() -> None:
     op.create_table(
         "cap_areas",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
-        sa.Column("cap_area_desc", sa.String(), nullable=False),
+        sa.Column("cap_area_desc", sa.String(), nullable=True),
         sa.Column("cap_area_altitude", sa.Float(), nullable=True),
         sa.Column("cap_area_ceiling", sa.Float(), nullable=True),
         sa.Column("cap_info_id", sa.Integer(), nullable=False),

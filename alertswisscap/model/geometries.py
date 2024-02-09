@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 
@@ -70,15 +71,15 @@ class AlertSwissCapGeometryMultiPolygon:
             }
     """
 
-    def __init__(self, cap_polygons: dict) -> None:
+    def __init__(self, cap_polygons: list, exclude_polygons=[]) -> None:
         self._exclude_polygon_pattern = re.compile(r"(\d+)\|(.*)")
-        self._multiPolygon = MultiPolygon(self._parse_cap_polygons(cap_polygons))
+        self._multiPolygon = MultiPolygon(self._parse_cap_polygons(cap_polygons, exclude_polygons))
 
-    def _parse_cap_polygons(self, cap_polygons):
+    def _parse_cap_polygons(self, cap_polygons, exclude_polygons):
         polygons = []
         holes_dict = {}
 
-        for cap_exlude_polygon in cap_polygons["exclude_polygons"]:
+        for cap_exlude_polygon in exclude_polygons:
             matches = self._exclude_polygon_pattern.match(str(cap_exlude_polygon))
             key = int(matches.group(1)) - 1
             coord = self._coord_str_list_to_polygon(matches.group(2).split(" "))
@@ -86,8 +87,8 @@ class AlertSwissCapGeometryMultiPolygon:
                 holes_dict[key] = []
             holes_dict[key].append(coord)
 
-        for c in range(len(cap_polygons["polygons"])):
-            cap_polygon = str(cap_polygons["polygons"][c])
+        for c in range(len(cap_polygons)):
+            cap_polygon = str(cap_polygons[c])
             log.debug(f"cap_polygon: {cap_polygon}")
             exterior = self._coord_str_list_to_polygon(cap_polygon.split(" "))
             interiors = []
@@ -107,3 +108,40 @@ class AlertSwissCapGeometryMultiPolygon:
 
     def as_multipolygon(self):
         return self._multiPolygon
+
+
+class CAPGeocodesDict(dict):
+    def __init__(self, input_list=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.key_prefix = "valueName"
+        self.value_prefix = "value"
+        if input_list:
+            self.deserialize(input_list)
+        log.debug(self)
+
+    def deserialize(self, input_list):
+        for item in input_list:
+            key = item[self.key_prefix]
+            if self.value_prefix in item:
+                try:
+                    value = super().__getitem__(key)
+                except KeyError:
+                    value = []
+                value.append(item[self.value_prefix])
+            else:
+                value = None
+            super().__setitem__(key, value)
+
+    def items(self):
+        for key, value in super().items():
+            for v in value:
+                yield key, v
+
+    def serialize(self):
+        return [{self.key_prefix: key, self.value_prefix: value} for key, value in self.items()]
+
+    def __repr__(self) -> str:
+        return str(self.serialize())
+
+    def __str__(self):
+        return json.dumps(self.serialize())

@@ -72,7 +72,9 @@ class CAPArea(Base):
     __tablename__ = "cap_areas"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    cap_area_desc = Column(String, nullable=False)
+    # FIXME: cap_area_desc should be not nullable,
+    # but some alerts areas have no description...
+    cap_area_desc = Column(String, nullable=True)
 
     # as per specifications, alitude and ceiling are in feet above sea level WGS84
     cap_area_altitude = Column(Float, nullable=True)
