@@ -36,7 +36,7 @@ class AlertSwissCapGeometryPoints:
             and the third number being the radius
     """
 
-    def __init__(self, cap_points: list(str)) -> None:
+    def __init__(self, cap_points: list) -> None:
         self._points = []
         for cap_point in cap_points:
             self._points.append(Circle(self._parse_cap_point(cap_point)))

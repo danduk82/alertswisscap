@@ -33,7 +33,6 @@ class CAPAlert(Base):
 
     # Assuming one-to-many relationship between CAPAlert and CAPInfo
     cap_info = relationship("CAPInfo", back_populates="cap_alert")
-    cap_area = relationship("CAPArea", back_populates="cap_alert")
 
 
 class CAPInfo(Base):
@@ -62,15 +61,24 @@ class CAPInfo(Base):
     # Foreign key relationship with CAPAlert
     cap_alert_cap_id = Column(String, ForeignKey("cap_alerts.cap_id"), nullable=False)
     cap_alert = relationship("CAPAlert", back_populates="cap_info")
+    cap_area = relationship("CAPArea", back_populates="cap_info")
 
 
 class CAPArea(Base):
     __tablename__ = "cap_areas"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    cap_area_desc = Column(String, nullable=True)
-    cap_alert_cap_id = Column(String, ForeignKey("cap_alerts.cap_id"), nullable=False)
-    cap_alert = relationship("CAPAlert", back_populates="cap_area")
+    cap_area_desc = Column(String, nullable=False)
+
+    # as per specifications, alitude and ceiling are in feet above sea level WGS84
+    cap_area_altitude = Column(Float, nullable=True)
+    cap_area_ceiling = Column(Float, nullable=True)
+
+    cap_info_id = Column(Integer, ForeignKey("cap_info.id"), nullable=False)
+    cap_info = relationship("CAPInfo", back_populates="cap_area")
+    cap_geocodes = relationship("CAPGeocodes", back_populates="cap_area")
+    cap_points = relationship("CAPPoint", back_populates="cap_area")
+    cap_polygons = relationship("CAPPolygon", back_populates="cap_area")
 
 
 class CAPGeocodes(Base):
@@ -80,6 +88,7 @@ class CAPGeocodes(Base):
     valueName = Column(String, nullable=False)
     value = Column(String, nullable=False)
     cap_area_id = Column(Integer, ForeignKey("cap_areas.id"))
+    cap_area = relationship("CAPArea", back_populates="cap_geocodes")
 
 
 class CAPPolygon(Base):
@@ -88,6 +97,7 @@ class CAPPolygon(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     geom = Column(Geometry(geometry_type="MULTIPOLYGON", srid=4326))
     cap_area_id = Column(Integer, ForeignKey("cap_areas.id"))
+    cap_area = relationship("CAPArea", back_populates="cap_polygons")
 
 
 class CAPCircle(Base):
@@ -95,8 +105,11 @@ class CAPCircle(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     geom = Column(Geometry(geometry_type="POINT", srid=4326))
+
+    # Radius is given in kilometers in the payload
     radius = Column(Float)
     cap_area_id = Column(Integer, ForeignKey("cap_areas.id"))
+    cap_area = relationship("CAPArea", back_populates="cap_polygons")
 
 
 # Create the engine and tables

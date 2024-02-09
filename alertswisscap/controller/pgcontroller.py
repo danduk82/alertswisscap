@@ -9,7 +9,6 @@ from alertswisscap.model.orm.cap import (
     CAPArea,
     CAPCircle,
     CAPInfo,
-    CAPLinestring,
     CAPPolygon,
 )
 
@@ -28,6 +27,8 @@ class CapPgController:
         return alerts, infos
 
     def put_alerts(self, alerts):
+        self.session.query(CAPAlert).delete()
+        raise
         for alert in alerts:
             cap_alert = CAPAlert(
                 reference=alert["reference"],
