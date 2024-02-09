@@ -28,7 +28,7 @@ class CapPgController:
 
     def put_alerts(self, alerts):
         self.session.query(CAPAlert).delete()
-        raise
+
         for alert in alerts:
             cap_alert = CAPAlert(
                 reference=alert["reference"],

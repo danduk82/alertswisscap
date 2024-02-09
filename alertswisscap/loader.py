@@ -50,10 +50,10 @@ def main():
         import json
 
         f.write(json.dumps(alerts, indent=2))
-    a, i = cap_pg_controller.load_alerts()
-    logger.debug(f"alerts: {a[0].cap_info[0].cap_language}")
-    logger.debug(f"infos: {i[0].cap_alert_cap_id}")
-    # cap_pg_controller.put_alerts(alerts)
+    # a, i = cap_pg_controller.load_alerts()
+    # logger.debug(f"alerts: {a[0].cap_info[0].cap_language}")
+    # logger.debug(f"infos: {i[0].cap_alert_cap_id}")
+    cap_pg_controller.put_alerts(alerts)
 
 
 if __name__ == "__main__":
