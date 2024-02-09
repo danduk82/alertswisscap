@@ -72,12 +72,11 @@ class CapPgController:
                         print(k, v)
                         geocode = CAPGeocodes(valueName=k, value=v)
                         cap_area.cap_geocodes.append(geocode)
-                    # polygons = AlertSwissCapGeometryMultiPolygon(
-                    #     area.get("polygons", []), cap_geocodes.get("ALERTSWISS_EXCLUDE_POLYGON")
-                    # )
-                    # for polygon in area.get("polygons", []):
-                    #     cap_polygon = CAPPolygon(geom=polygon)
-                    #     cap_area.cap_polygons.append(cap_polygon)
+                    cap_multipolygon = AlertSwissCapGeometryMultiPolygon(
+                        area.get("polygons", []), cap_geocodes.get("ALERTSWISS_EXCLUDE_POLYGON")
+                    )
+                    cap_polygon = CAPPolygon(geom=from_shape(cap_multipolygon.as_multipolygon(), srid=4326))
+                    cap_area.cap_polygons.append(cap_polygon)
                     circles = AlertSwissCapGeometryPoints(area.get("circles", []))
                     for circle in circles.points():
                         cap_circle = CAPCircle(geom=from_shape(circle.point, srid=4326), radius=circle.radius)

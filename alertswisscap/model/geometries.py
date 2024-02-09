@@ -44,6 +44,7 @@ class AlertSwissCapGeometryPoints:
 
     def _parse_cap_point(self, cap_point):
         coord = cap_point.split(" ")[0].split(",")
+        coord.reverse()
         radius = float(cap_point.split(" ")[1])
         return tuple([float(i) for i in coord] + [radius])
 
@@ -107,7 +108,9 @@ class AlertSwissCapGeometryMultiPolygon:
 
     def _coord_str_to_coord_tuple(self, coord_str):
         log.debug(f"coord_str: {coord_str}")
-        return tuple([float(i) for i in coord_str.split(",")])
+        coord = coord_str.split(",")
+        coord.reverse()
+        return tuple([float(i) for i in coord])
 
     def as_multipolygon(self):
         return self._multiPolygon
