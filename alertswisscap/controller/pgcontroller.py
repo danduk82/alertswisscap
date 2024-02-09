@@ -1,4 +1,5 @@
 from geoalchemy2 import Geometry
+from geoalchemy2.shape import from_shape
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
@@ -76,11 +77,11 @@ class CapPgController:
                     # )
                     # for polygon in area.get("polygons", []):
                     #     cap_polygon = CAPPolygon(geom=polygon)
-                    #     cap_area.cap_polygon.append(cap_polygon)
-                    # circles = AlertSwissCapGeometryPoints(area.get("circles", []))
-                    # for circle in circles.points():
-                    #     cap_circle = CAPCircle(geom=circle.point, radius=circle.radius)
-                    #     cap_area.cap_circle.append(cap_circle)
+                    #     cap_area.cap_polygons.append(cap_polygon)
+                    circles = AlertSwissCapGeometryPoints(area.get("circles", []))
+                    for circle in circles.points():
+                        cap_circle = CAPCircle(geom=from_shape(circle.point, srid=4326), radius=circle.radius)
+                        cap_area.cap_circles.append(cap_circle)
                     cap_info.cap_area.append(cap_area)
                 cap_alert.cap_info.append(cap_info)
             self.session.add(cap_alert)

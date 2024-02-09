@@ -43,7 +43,9 @@ class AlertSwissCapGeometryPoints:
             self._points.append(Circle(self._parse_cap_point(cap_point)))
 
     def _parse_cap_point(self, cap_point):
-        return tuple([float(i) for i in cap_point.split(" ")[0].split(",")])
+        coord = cap_point.split(" ")[0].split(",")
+        radius = float(cap_point.split(" ")[1])
+        return tuple([float(i) for i in coord] + [radius])
 
     def points(self):
         return self._points
@@ -79,13 +81,14 @@ class AlertSwissCapGeometryMultiPolygon:
         polygons = []
         holes_dict = {}
 
-        for cap_exlude_polygon in exclude_polygons:
-            matches = self._exclude_polygon_pattern.match(str(cap_exlude_polygon))
-            key = int(matches.group(1)) - 1
-            coord = self._coord_str_list_to_polygon(matches.group(2).split(" "))
-            if not key in holes_dict.keys():
-                holes_dict[key] = []
-            holes_dict[key].append(coord)
+        if exclude_polygons:
+            for cap_exlude_polygon in exclude_polygons:
+                matches = self._exclude_polygon_pattern.match(str(cap_exlude_polygon))
+                key = int(matches.group(1)) - 1
+                coord = self._coord_str_list_to_polygon(matches.group(2).split(" "))
+                if not key in holes_dict.keys():
+                    holes_dict[key] = []
+                holes_dict[key].append(coord)
 
         for c in range(len(cap_polygons)):
             cap_polygon = str(cap_polygons[c])
