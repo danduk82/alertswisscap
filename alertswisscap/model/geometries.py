@@ -18,7 +18,10 @@ class Circle:
 
 
 class AlertSwissCapGeometryPoints:
-    """Converts the points from the AlertSwissCap API to a shapely Point object
+    """
+    Converts the points from the AlertSwissCap API
+    to a shapely Point object with a radius attribute.
+
     parameters:
         cap_points: str
             The cap_point from the AlertSwissCap API
@@ -29,7 +32,8 @@ class AlertSwissCapGeometryPoints:
                                 "47.08692,8.57041 0.27024381599999997",
                                 "47.29503,8.88693 0.370062386"
                             ]
-            with the first two comma-separated numbers being the coordinates and the third number being the radius
+            with the first two comma-separated numbers being the coordinates
+            and the third number being the radius
     """
 
     def __init__(self, cap_points: list(str)) -> None:
@@ -45,15 +49,24 @@ class AlertSwissCapGeometryPoints:
 
 
 class AlertSwissCapGeometryMultiPolygon:
-    """Convert the polygons and exclude polygons from the AlertSwissCap API to a shapely MultiPolygon object
+    """
+    Convert the polygons and exclude polygons from the AlertSwissCap API
+    to a shapely MultiPolygon object.
+
     parameters:
         cap_polygons: dict
             The cap_polygons dict from the AlertSwissCap API
             contains the polygons and exclude polygons
             in the format:
             {
-                'polygons' : [ '47.123,8.123 47.123,8.123 47.123,8.123',  '47.123,8.123 47.123,8.123 47.123,8.123'],
-                'exclude_polygons' : [ '1|47.113,8.113 47.122,8.122 47.123,8.123',  '2|47.123,8.123 47.123,8.123 47.123,8.123']
+                'polygons' : [
+                        '47.123,8.123 47.123,8.123 47.123,8.123',
+                        '47.123,8.123 47.123,8.123 47.123,8.123'
+                    ],
+                'exclude_polygons' : [
+                        '1|47.113,8.113 47.122,8.122 47.123,8.123',
+                        '2|47.123,8.123 47.123,8.123 47.123,8.123'
+                    ]
             }
     """
 

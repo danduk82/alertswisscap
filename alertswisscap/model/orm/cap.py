@@ -68,11 +68,18 @@ class CAPArea(Base):
     __tablename__ = "cap_areas"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    cap_circle_id = Column(Integer, ForeignKey("cap_circles.id"))
-    cap_polygon_id = Column(Integer, ForeignKey("cap_polygons.id"))
-
+    cap_area_desc = Column(String, nullable=True)
     cap_alert_cap_id = Column(String, ForeignKey("cap_alerts.cap_id"), nullable=False)
     cap_alert = relationship("CAPAlert", back_populates="cap_area")
+
+
+class CAPGeocodes(Base):
+    __tablename__ = "cap_geocodes"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    valueName = Column(String, nullable=False)
+    value = Column(String, nullable=False)
+    cap_area_id = Column(Integer, ForeignKey("cap_areas.id"))
 
 
 class CAPPolygon(Base):
@@ -80,6 +87,7 @@ class CAPPolygon(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     geom = Column(Geometry(geometry_type="MULTIPOLYGON", srid=4326))
+    cap_area_id = Column(Integer, ForeignKey("cap_areas.id"))
 
 
 class CAPCircle(Base):
@@ -88,6 +96,7 @@ class CAPCircle(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     geom = Column(Geometry(geometry_type="POINT", srid=4326))
     radius = Column(Float)
+    cap_area_id = Column(Integer, ForeignKey("cap_areas.id"))
 
 
 # Create the engine and tables
