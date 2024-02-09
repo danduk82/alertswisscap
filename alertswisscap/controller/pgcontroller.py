@@ -3,7 +3,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-from alertswisscap.model.orm.cap import Base, CAPAlert, CAPArea, CAPCircle, CAPInfo, CAPLinestring, CAPPolygon
+from alertswisscap.model.orm.cap import (
+    Base,
+    CAPAlert,
+    CAPArea,
+    CAPCircle,
+    CAPInfo,
+    CAPLinestring,
+    CAPPolygon,
+)
 
 
 class CapPgController:
@@ -13,6 +21,11 @@ class CapPgController:
         self.engine = create_engine(self.url)
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
+
+    def load_alerts(self):
+        alerts = self.session.query(CAPAlert).all()
+        infos = self.session.query(CAPInfo).all()
+        return alerts, infos
 
     def put_alerts(self, alerts):
         for alert in alerts:

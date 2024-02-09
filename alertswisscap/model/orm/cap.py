@@ -1,5 +1,16 @@
 from geoalchemy2 import Geometry
-from sqlalchemy import JSON, Column, DateTime, Float, ForeignKey, Integer, MetaData, String, create_engine
+from sqlalchemy import (
+    JSON,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    MetaData,
+    String,
+    UniqueConstraint,
+    create_engine,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -9,39 +20,47 @@ Base = declarative_base(metadata=MetaData(schema="alertswisscap"))
 class CAPAlert(Base):
     __tablename__ = "cap_alerts"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    cap_id = Column(String, primary_key=True)
     reference = Column(String, nullable=False)
-    cap_id = Column(String, nullable=False)
     cap_sender = Column(String, nullable=True)
     cap_sent = Column(DateTime, nullable=False)
     cap_status = Column(String, nullable=False)
-    cap_message_type = Column(String, nullable=True)
-    cap_scope = Column(String, nullable=True)
+    cap_message_type = Column(String, nullable=False)
+    cap_scope = Column(String, nullable=False)
+    cap_code = Column(String, nullable=True)
+    cap_restriction = Column(String, nullable=True)
+    cap_references = Column(String, nullable=True)
 
     # Assuming one-to-many relationship between CAPAlert and CAPInfo
     cap_info = relationship("CAPInfo", back_populates="cap_alert")
+    cap_area = relationship("CAPArea", back_populates="cap_alert")
 
 
 class CAPInfo(Base):
     __tablename__ = "cap_info"
+    __table_args__ = (
+        UniqueConstraint("cap_alert_cap_id", "cap_language", name="uc_cap_info_cap_id_cap_languange"),
+    )
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    cap_language = Column(String, nullable=True)
-    cap_category = Column(String, nullable=True)
-    cap_event = Column(String, nullable=True)
-    cap_urgency = Column(String, nullable=True)
-    cap_severity = Column(String, nullable=True)
-    cap_certainty = Column(String, nullable=True)
-    cap_onset = Column(DateTime)
+    cap_language = Column(String, nullable=False)
+    cap_category = Column(String, nullable=False)
+    cap_event = Column(String, nullable=False)
+    cap_urgency = Column(String, nullable=False)
+    cap_severity = Column(String, nullable=False)
+    cap_certainty = Column(String, nullable=False)
+    cap_onset = Column(DateTime, nullable=True)
     cap_sender_name = Column(String, nullable=True)
-    cap_headline = Column(String, nullable=True)
-    cap_description = Column(String, nullable=True)
+    cap_expires = Column(DateTime, nullable=True)
+    cap_sender_name = Column(String, nullable=True)
+    cap_headline = Column(String, nullable=False)
+    cap_description = Column(String, nullable=False)
     cap_instruction = Column(String, nullable=True)
+    cap_web = Column(String, nullable=True)
     cap_contact = Column(String, nullable=True)
-    cap_code = Column(String, nullable=True)
 
     # Foreign key relationship with CAPAlert
-    cap_alert_id = Column(Integer, ForeignKey("cap_alerts.id"))
+    cap_alert_cap_id = Column(String, ForeignKey("cap_alerts.cap_id"), nullable=False)
     cap_alert = relationship("CAPAlert", back_populates="cap_info")
 
 
@@ -51,7 +70,9 @@ class CAPArea(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     cap_circle_id = Column(Integer, ForeignKey("cap_circles.id"))
     cap_polygon_id = Column(Integer, ForeignKey("cap_polygons.id"))
-    cap_linestring_id = Column(Integer, ForeignKey("cap_linestrings.id"))
+
+    cap_alert_cap_id = Column(String, ForeignKey("cap_alerts.cap_id"), nullable=False)
+    cap_alert = relationship("CAPAlert", back_populates="cap_area")
 
 
 class CAPPolygon(Base):
@@ -59,13 +80,6 @@ class CAPPolygon(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     geom = Column(Geometry(geometry_type="MULTIPOLYGON", srid=4326))
-
-
-class CAPLinestring(Base):
-    __tablename__ = "cap_linestrings"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    geom = Column(Geometry(geometry_type="MULTILINESTRING", srid=4326))
 
 
 class CAPCircle(Base):

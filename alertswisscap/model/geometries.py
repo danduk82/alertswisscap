@@ -1,15 +1,47 @@
 import logging
 import re
 
-from shapely.geometry import MultiPolygon, Polygon
+from shapely.geometry import MultiPolygon, Point, Polygon
 
 logging.basicConfig(level=logging.DEBUG)
 
 log = logging.getLogger()
 
 
-class AlertSwissCapGeometryPoint:
-    pass
+class Circle:
+    def __init__(self, x_y_r: tuple) -> None:
+        self.point = Point(x_y_r[0], x_y_r[1])
+        self.radius = x_y_r[2]
+
+    def as_dict(self):
+        return {"point": self.point, "radius": self.radius}
+
+
+class AlertSwissCapGeometryPoints:
+    """Converts the points from the AlertSwissCap API to a shapely Point object
+    parameters:
+        cap_points: str
+            The cap_point from the AlertSwissCap API
+            in the format:
+                "circles": [
+                                "47.17511,8.49602 0.240069058",
+                                "47.18116,8.52603 0.26664098",
+                                "47.08692,8.57041 0.27024381599999997",
+                                "47.29503,8.88693 0.370062386"
+                            ]
+            with the first two comma-separated numbers being the coordinates and the third number being the radius
+    """
+
+    def __init__(self, cap_points: list(str)) -> None:
+        self._points = []
+        for cap_point in cap_points:
+            self._points.append(Circle(self._parse_cap_point(cap_point)))
+
+    def _parse_cap_point(self, cap_point):
+        return tuple([float(i) for i in cap_point.split(" ")[0].split(",")])
+
+    def points(self):
+        return self._points
 
 
 class AlertSwissCapGeometryMultiPolygon:
@@ -62,7 +94,3 @@ class AlertSwissCapGeometryMultiPolygon:
 
     def as_multipolygon(self):
         return self._multiPolygon
-
-
-class AlertSwissCapGeometryMultiLine:
-    pass
