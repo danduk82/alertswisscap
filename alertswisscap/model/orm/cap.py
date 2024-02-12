@@ -41,7 +41,7 @@ class CAPInfo(Base):
         UniqueConstraint("cap_alert_cap_id", "cap_language", name="uc_cap_info_cap_id_cap_languange"),
     )
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    info_id = Column(Integer, primary_key=True, autoincrement=True)
     # FIXME: cap_language should be not nullable,
     # but some TEST-xyz alerts have no language...
     cap_language = Column(String, nullable=True)
@@ -71,7 +71,7 @@ class CAPInfo(Base):
 class CAPArea(Base):
     __tablename__ = "cap_areas"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    area_id = Column(Integer, primary_key=True, autoincrement=True)
     # FIXME: cap_area_desc should be not nullable,
     # but some alerts areas have no description...
     cap_area_desc = Column(String, nullable=True)
@@ -80,7 +80,7 @@ class CAPArea(Base):
     cap_area_altitude = Column(Float, nullable=True)
     cap_area_ceiling = Column(Float, nullable=True)
 
-    cap_info_id = Column(Integer, ForeignKey("cap_info.id", ondelete="CASCADE"), nullable=False)
+    cap_info_info_id = Column(Integer, ForeignKey("cap_info.info_id", ondelete="CASCADE"), nullable=False)
     cap_info = relationship("CAPInfo", back_populates="cap_area")
     cap_geocodes = relationship("CAPGeocodes", back_populates="cap_area")
     cap_circles = relationship("CAPCircle", back_populates="cap_area")
@@ -90,31 +90,31 @@ class CAPArea(Base):
 class CAPGeocodes(Base):
     __tablename__ = "cap_geocodes"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    geocode_id = Column(Integer, primary_key=True, autoincrement=True)
     valueName = Column(String, nullable=False)
     value = Column(String, nullable=False)
-    cap_area_id = Column(Integer, ForeignKey("cap_areas.id", ondelete="CASCADE"))
+    cap_area_area_id = Column(Integer, ForeignKey("cap_areas.area_id", ondelete="CASCADE"))
     cap_area = relationship("CAPArea", back_populates="cap_geocodes")
 
 
 class CAPPolygon(Base):
     __tablename__ = "cap_polygons"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    polygon_id = Column(Integer, primary_key=True, autoincrement=True)
     geom = Column(Geometry(geometry_type="MULTIPOLYGON", srid=4326))
-    cap_area_id = Column(Integer, ForeignKey("cap_areas.id", ondelete="CASCADE"))
+    cap_area_area_id = Column(Integer, ForeignKey("cap_areas.area_id", ondelete="CASCADE"))
     cap_area = relationship("CAPArea", back_populates="cap_polygons")
 
 
 class CAPCircle(Base):
     __tablename__ = "cap_circles"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    circle_id = Column(Integer, primary_key=True, autoincrement=True)
     geom = Column(Geometry(geometry_type="POINT", srid=4326))
 
     # Radius is given in kilometers in the payload
     radius = Column(Float)
-    cap_area_id = Column(Integer, ForeignKey("cap_areas.id", ondelete="CASCADE"))
+    cap_area_area_id = Column(Integer, ForeignKey("cap_areas.area_id", ondelete="CASCADE"))
     cap_area = relationship("CAPArea", back_populates="cap_circles")
 
 
