@@ -118,6 +118,8 @@ class CAPCircle(Base):
     cap_area = relationship("CAPArea", back_populates="cap_circles")
 
 
-# Create the engine and tables
-# engine = create_engine('postgresql://your_username:your_password@localhost/your_database')
-# Base.metadata.create_all(engine)
+class CantonLookup(Base):
+    __tablename__ = "canton_lookup"
+
+    shortener = Column(String, primary_key=True)
+    canton_number = Column(Integer, unique=True)

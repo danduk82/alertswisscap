@@ -16,6 +16,7 @@ from lxml.objectify import BoolElement, FloatElement, IntElement, StringElement
 
 class CAPClient:
     def __init__(self, url=DEFAULT_CAP_URL):
+        logger.debug(f"initializing CAPClient with url: {url}")
         self.url = url
 
     def strip_url(self):
@@ -25,6 +26,7 @@ class CAPClient:
             return self.url
 
     def _get_raw_alerts(self):
+        logger.debug(f"getting alerts from {self.url}")
         if self.url.startswith("http"):
             response = requests.get(self.url)
             if response.status_code != 200:
@@ -43,6 +45,7 @@ class CAPClient:
     def _parse_alerts(self, alerts):
         parsed_alerts = []
         for alert in alerts:
+            logger.debug(f"alert to be parsed: {alert}")
             parsed_alert = {}
             parsed_alert["reference"] = alert["reference"]
             parsed_alert["content"] = CAPParser(alert["alert"]).as_dict()

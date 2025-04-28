@@ -46,7 +46,8 @@ class CapPgController:
                 cap_message_type=alert["content"][0]["cap_message_type"],
                 cap_scope=alert["content"][0]["cap_scope"],
             )
-            for info in alert["content"][0]["cap_info"]:
+            # FIXME: what to do if there are no cap_info?
+            for info in alert["content"][0].get("cap_info", []):
                 cap_info = CAPInfo(
                     cap_language=info.get("cap_language", None),
                     cap_category=info.get("cap_category", None),
@@ -61,6 +62,7 @@ class CapPgController:
                     cap_instruction=info.get("cap_instruction", None),
                     cap_contact=info.get("cap_contact", None),
                 )
+                # FIXME: what to do if there are no cap_area?
                 for area in info.get("cap_area", []):
                     cap_area = CAPArea(
                         cap_area_desc=area.get("cap_area_desc", None),

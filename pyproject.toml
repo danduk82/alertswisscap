@@ -29,6 +29,9 @@ psycopg2-binary = "^2.9.9"
 geoalchemy2 = "^0.14.2"
 shapely = "^2.0.2"
 
+[tool.poetry.scripts]
+alertswiss-client = "alertswisscap.loader:main"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

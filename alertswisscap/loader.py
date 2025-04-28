@@ -42,7 +42,7 @@ def main():
     mp = AlertSwissCapGeometryMultiPolygon(cap_polygons, exclude_polygons)
     print(mp._multiPolygon)
 
-    pg_url = "postgresql://naz_user:password@localhost:5432/data_naz"
+    pg_url = "postgresql://naz_user:password@localhost:5432/neoc_basics"
     cap_pg_controller = CapPgController(pg_url)
     with open("/tmp/parsed_alerts_2.json", "w") as f:
         import json
