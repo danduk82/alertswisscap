@@ -5,6 +5,7 @@ from sqlalchemy import (
     DateTime,
     Float,
     ForeignKey,
+    Index,
     Integer,
     MetaData,
     String,
@@ -62,6 +63,7 @@ class CAPAlertUnified(Base):
     cap_description_fr = Column(String, nullable=True)
     cap_description_it = Column(String, nullable=True)
     cap_description_en = Column(String, nullable=True)
+    cap_delete_message = Column(String, nullable=True)
 
     cap_instruction_de = Column(String, nullable=True)
     cap_instruction_fr = Column(String, nullable=True)
@@ -89,6 +91,8 @@ class CAPGeocodes(Base):
     cap_alert_cap_id = Column(String, ForeignKey("cap_alerts.cap_id", ondelete="CASCADE"), nullable=False)
     cap_alert = relationship("CAPAlertUnified", back_populates="cap_geocodes")
 
+    # No geometry here, so no GIST index needed
+
 
 class CAPPolygon(Base):
     __tablename__ = "cap_polygons"
@@ -105,7 +109,7 @@ class CAPCircle(Base):
 
     circle_id = Column(Integer, primary_key=True, autoincrement=True)
     geom = Column(Geometry(geometry_type="POINT", srid=4326))
-    radius = Column(Float, nullable=True)  # radius in kilometers
+    radius = Column(Float, nullable=True)
 
     cap_alert_cap_id = Column(String, ForeignKey("cap_alerts.cap_id", ondelete="CASCADE"), nullable=False)
     cap_alert = relationship("CAPAlertUnified", back_populates="cap_circles")
