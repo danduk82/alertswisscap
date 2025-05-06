@@ -34,6 +34,11 @@ class CapPgController:
     def put_alerts(self, alerts):
         self.session.query(CAPAlertUnified).delete()
 
+        cap_alerts = []
+        cap_geocodes = []
+        cap_polygons = []
+        cap_circles = []
+
         for alert in alerts:
             first_content = alert["content"][0]
 
@@ -48,24 +53,12 @@ class CapPgController:
                 cap_code=first_content.get("cap_code"),
                 cap_restriction=first_content.get("cap_restriction"),
                 cap_references=first_content.get("cap_references"),
-                cap_category=None,  # will be filled from 'de-CH' info
-                cap_event=None,
-                cap_urgency=None,
-                cap_severity=None,
-                cap_certainty=None,
-                cap_onset=None,
-                cap_expires=None,
-                cap_sender_name=None,
-                cap_web=None,
-                cap_contact=None,
             )
 
-            # Now process infos
             for info in first_content.get("cap_info", []):
                 lang = info.get("cap_language")
 
                 if lang == "de-CH":
-                    # Fill common fields from de-CH info block
                     cap_alert.cap_category = info.get("cap_category")
                     cap_alert.cap_event = info.get("cap_event")
                     cap_alert.cap_urgency = info.get("cap_urgency")
@@ -77,39 +70,38 @@ class CapPgController:
                     cap_alert.cap_web = info.get("cap_web")
                     cap_alert.cap_contact = info.get("cap_contact")
 
-                    # Process areas (ONLY for de-CH)
                     for area in info.get("cap_area", []):
                         cap_alert.cap_area_desc = area.get("cap_area_desc")
                         cap_alert.cap_area_altitude = area.get("cap_area_altitude")
                         cap_alert.cap_area_ceiling = area.get("cap_area_ceiling")
 
-                        # Geocodes
-                        cap_geocodes = CAPGeocodesDict(area.get("geocodes", []))
-                        for k, v in cap_geocodes.items():
-                            geocode = CAPGeocodes(valueName=k, value=v, cap_alert=cap_alert)
-                            self.session.add(geocode)
+                        cap_geocodes_dict = CAPGeocodesDict(area.get("geocodes", []))
+                        for k, v in cap_geocodes_dict.items():
+                            cap_geocodes.append(
+                                CAPGeocodes(valueName=k, value=v, cap_alert_cap_id=cap_alert.cap_id)
+                            )
 
-                        # Polygons
                         cap_multipolygon = AlertSwissCapGeometryMultiPolygon(
-                            area.get("polygons", []), cap_geocodes.get("ALERTSWISS_EXCLUDE_POLYGON")
+                            area.get("polygons", []), cap_geocodes_dict.get("ALERTSWISS_EXCLUDE_POLYGON")
                         )
-                        cap_polygon = CAPPolygon(
-                            geom=from_shape(cap_multipolygon.as_multipolygon(), srid=4326),
-                            cap_alert=cap_alert,
+                        cap_polygons.append(
+                            CAPPolygon(
+                                geom=from_shape(cap_multipolygon.as_multipolygon(), srid=4326),
+                                cap_alert_cap_id=cap_alert.cap_id,
+                            )
                         )
-                        self.session.add(cap_polygon)
 
-                        # Circles
                         circles = AlertSwissCapGeometryPoints(area.get("circles", []))
                         for circle in circles.points():
-                            cap_circle = CAPCircle(
-                                geom=from_shape(circle.point, srid=4326),
-                                radius=circle.radius,
-                                cap_alert=cap_alert,
+                            cap_circles.append(
+                                CAPCircle(
+                                    geom=from_shape(circle.point, srid=4326),
+                                    radius=circle.radius,
+                                    cap_alert_cap_id=cap_alert.cap_id,
+                                )
                             )
-                            self.session.add(cap_circle)
 
-                # Process translations into language-specific fields
+                # Translations
                 if lang == "de-CH":
                     cap_alert.cap_headline_de = info.get("cap_headline")
                     cap_alert.cap_description_de = info.get("cap_description")
@@ -127,6 +119,12 @@ class CapPgController:
                     cap_alert.cap_description_en = info.get("cap_description")
                     cap_alert.cap_instruction_en = info.get("cap_instruction")
 
-            self.session.add(cap_alert)
+            cap_alerts.append(cap_alert)
+
+        # Use bulk insert for performance
+        self.session.bulk_save_objects(cap_alerts)
+        self.session.bulk_save_objects(cap_geocodes)
+        self.session.bulk_save_objects(cap_polygons)
+        self.session.bulk_save_objects(cap_circles)
 
         self.session.commit()
