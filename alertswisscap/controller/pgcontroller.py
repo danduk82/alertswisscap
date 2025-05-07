@@ -104,18 +104,22 @@ class CapPgController:
                 # Translations
                 if lang == "de-CH":
                     cap_alert.cap_headline_de = info.get("cap_headline")
+                    cap_alert.cap_event_de = info.get("cap_event")
                     cap_alert.cap_description_de = info.get("cap_description")
                     cap_alert.cap_instruction_de = info.get("cap_instruction")
                 elif lang == "fr-CH":
                     cap_alert.cap_headline_fr = info.get("cap_headline")
+                    cap_alert.cap_event_fr = info.get("cap_event")
                     cap_alert.cap_description_fr = info.get("cap_description")
                     cap_alert.cap_instruction_fr = info.get("cap_instruction")
                 elif lang == "it-CH":
                     cap_alert.cap_headline_it = info.get("cap_headline")
+                    cap_alert.cap_event_it = info.get("cap_event")
                     cap_alert.cap_description_it = info.get("cap_description")
                     cap_alert.cap_instruction_it = info.get("cap_instruction")
                 elif lang == "en-US":
                     cap_alert.cap_headline_en = info.get("cap_headline")
+                    cap_alert.cap_event_en = info.get("cap_event")
                     cap_alert.cap_description_en = info.get("cap_description")
                     cap_alert.cap_instruction_en = info.get("cap_instruction")
 

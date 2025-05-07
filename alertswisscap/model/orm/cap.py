@@ -43,7 +43,6 @@ class CAPAlertUnified(Base):
 
     # cap_info fields (merged)
     cap_category = Column(String, nullable=True)
-    cap_event = Column(String, nullable=True)
     cap_urgency = Column(String, nullable=True)
     cap_severity = Column(String, nullable=True)
     cap_certainty = Column(String, nullable=True)
@@ -63,6 +62,11 @@ class CAPAlertUnified(Base):
     cap_description_fr = Column(String, nullable=True)
     cap_description_it = Column(String, nullable=True)
     cap_description_en = Column(String, nullable=True)
+
+    cap_event_de = Column(String, nullable=True)
+    cap_event_fr = Column(String, nullable=True)
+    cap_event_it = Column(String, nullable=True)
+    cap_event_en = Column(String, nullable=True)
 
     cap_instruction_de = Column(String, nullable=True)
     cap_instruction_fr = Column(String, nullable=True)
