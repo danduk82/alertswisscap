@@ -8,7 +8,11 @@ from capparselib.parsers import CAPParser
 # DEFAULT_CAP_URL = "https://alertswiss.poatest.ch/alertswiss/v2/alerts?scope=Public"
 # DEFAULT_CAP_URL = "https://alertswiss.poatest.ch/alertswiss/v2/alerts?scope=Restricted"
 # DEFAULT_CAP_URL = "https://alertswiss.poatest.ch/alertswiss/v2/alerts?scope=All"
-DEFAULT_CAP_URL = "https://alertswiss.poatest.ch/alertswiss/v1/alerts"
+# DEFAULT_CAP_URL = "https://alertswiss.poatest.ch/alertswiss/v1/alerts"
+DEFAULT_CAP_URL = "https://alertswiss.polyalert-test.ch/alertswiss/v2/alerts?scope=All"
+# DEFAULT_CAP_URL = "https://alertswiss.polyalert.ch/alertswiss/v2/alerts?scope=All"
+# DEFAULT_CAP_URL = "https://alertswiss.polyalert-test.ch/alertswiss/v1/alerts"
+
 
 logger = logging.getLogger(__name__)
 from lxml.objectify import BoolElement, FloatElement, IntElement, StringElement
@@ -29,7 +33,18 @@ class CAPClient:
         logger.debug(f"getting alerts from {self.url}")
         if self.url.startswith("http"):
             response = requests.get(self.url)
+            response = requests.get(
+                self.url,
+                cert=(
+                    "/home/aborghi/Documents/projects/BABS/swiss-cap-client/alertswisscap/cert/client_vp_cert.pem",
+                    "/home/aborghi/Documents/projects/BABS/swiss-cap-client/alertswisscap/cert/client_vp_key.pem",
+                ),
+                verify=True,
+            )
+            # response = requests.get(self.url, cert=('/home/aborghi/Documents/projects/BABS/swiss-cap-client/alertswisscap/cert/client_pr_cert.pem','/home/aborghi/Documents/projects/BABS/swiss-cap-client/alertswisscap/cert/client_pr_key.pem'), verify=True)
+
             if response.status_code != 200:
+                print(response.content)
                 raise Exception("Error while getting alerts")
             return json.loads(response.content)["body"]["alerts"]
         elif self.url.startswith("file"):

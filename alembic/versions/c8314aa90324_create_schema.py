@@ -1,21 +1,20 @@
-"""create tables
+"""Create schema
 
-Revision ID: 255f65c142b3
-Revises:
-Create Date: 2024-02-12 15:11:23.334436
+Revision ID: c8314aa90324
+Revises: dcd953748674
+Create Date: 2025-04-29 08:38:30.342377
 
 """
 
 from collections.abc import Sequence
 from typing import Union
 
-import geoalchemy2
 import sqlalchemy as sa
 
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "fa57a32341d1"
+revision: str = "c8314aa90324"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
